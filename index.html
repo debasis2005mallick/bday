@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A premium interactive birthday surprise for Saloni, crafted with love by Debasis. Featuring a heartfelt letter, memory lane with real photos, balloon wish-popping game, and a magical surprise gift!">
+  <title>Happy Birthday Saloni! 🎂✨ From Debasis</title>
+  <!-- Google Fonts: Outfit and Playfair Display for a luxurious, premium feel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-royal-magic">
+
+  <!-- Particle Background Layer -->
+  <canvas id="particlesCanvas"></canvas>
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- BACKGROUND MUSIC CONTROLLERS -->
+  <div class="audio-controls-container">
+    <button id="musicToggleBtn" aria-label="Toggle Background Music" class="floating-btn muted">
+      <!-- Music Icon (Muted initially) -->
+      <svg id="musicIconMuted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+      <svg id="musicIconPlaying" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg hidden"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+    </button>
+  </div>
+
+  <!-- SETTINGS DRAWER CONTROLLER -->
+  <div id="settingsBtnContainer">
+    <button id="settingsOpenBtn" aria-label="Open Settings" class="floating-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
+  </div>
+
+  <!-- SCREEN 1: THE WELCOME LOCK GATEWAY -->
+  <section id="lockScreen" class="screen-view active-view">
+    <div class="lock-panel glass-card">
+      <div class="lock-header">
+        <div class="gift-icon-sparkle">🎁</div>
+        <h2 class="playfair-title">Hey Saloni! 🎂</h2>
+        <p class="subtitle">Someone special made this just for you... Enter the secret passcode to unlock your birthday surprise! 💕</p>
+      </div>
+
+      <div class="passcode-container">
+        <input type="password" id="passcodeInput" maxLength="10" placeholder="••••" autocomplete="off" aria-label="Enter passcode">
+        <button id="unlockBtn">Open Surprise ✨</button>
+      </div>
+
+      <p id="lockErrorMsg" class="error-msg hidden">Hmm, that's not quite right. Try again!</p>
+      <p id="lockHintText" class="hint-text"></p>
+      
+      <button id="skipLockBtn" class="text-link-btn">Unlock with Magic ✨</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: MAIN SURPRISE DASHBOARD -->
+  <section id="mainDashboard" class="screen-view hidden">
+    <!-- Header Decor -->
+    <header class="dashboard-header">
+      <div class="emoji-floater">🎉 🎈 🍰 ✨</div>
+      <h1 id="mainTitle" class="playfair-title">HAPPY BIRTHDAY!</h1>
+      <h2 id="recipientGreeting" class="greeting-subtitle">To the Wonderful <span id="recipientNameText">Wonderful</span> (<span id="recipientAgeText">25</span>)</h2>
+    </header>
+
+    <!-- Main Dynamic Navigation Card -->
+    <main class="dashboard-content shadow-premium glass-card">
+      
+      <!-- Tab Navigation Menu -->
+      <nav class="tab-navigation" aria-label="Surprise Features Navigation">
+        <button id="tabBtnLetter" class="tab-btn active-tab" data-tab="tabLetter">
+          <span class="tab-icon">✉️</span> <span class="tab-label">Letter</span>
+        </button>
+        <button id="tabBtnMemories" class="tab-btn" data-tab="tabMemories">
+          <span class="tab-icon">📸</span> <span class="tab-label">Memories</span>
+        </button>
+        <button id="tabBtnBalloons" class="tab-btn" data-tab="tabBalloons">
+          <span class="tab-icon">🎈</span> <span class="tab-label">Pop Game</span>
+        </button>
+        <button id="tabBtnGift" class="tab-btn" data-tab="tabGift">
+          <span class="tab-icon">🎁</span> <span class="tab-label">Gift Box</span>
+        </button>
+      </nav>
+
+      <!-- Content Panes container -->
+      <div class="tab-content-container">
+
+        <!-- TAB 1: THE HEARTFELT LETTER -->
+        <article id="tabLetter" class="tab-pane active-pane">
+          <div class="letter-layout">
+            <h3 id="letterTitleText" class="letter-headline playfair-title">A Special Letter For You...</h3>
+            <div id="typewriterTextContainer" class="letter-body-text">
+              <!-- Typewriter javascript prints text here -->
+            </div>
+            <!-- Letter Footer / Stamp -->
+            <div class="letter-footer">
+              <div class="seal-icon">❤️</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- TAB 2: 3D MEMORY LANE DECK CAROUSEL -->
+        <article id="tabMemories" class="tab-pane hidden">
+          <div class="memory-lane-layout">
+            <h3 class="pane-title playfair-title">Memory Lane 📸</h3>
+            <p class="pane-subtitle">Swipe or tap the buttons to revisit some beautiful moments we share.</p>
+            
+            <div class="memory-card-deck-wrapper">
+              <button id="prevMemoryBtn" class="nav-arrow-btn" aria-label="Previous Memory">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-svg"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+
+              <div id="memoryCardsContainer" class="cards-deck">
+                <!-- Javascript builds memory cards dynamically here -->
+              </div>
+
+              <button id="nextMemoryBtn" class="nav-arrow-btn" aria-label="Next Memory">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-svg"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <!-- Dots indicator link -->
+            <div id="deckIndicators" class="deck-indicators">
+              <!-- Dynamic dots built here -->
+            </div>
+          </div>
+        </article>
+
+        <!-- TAB 3: INTERACTIVE BALLOON POPPING GAME -->
+        <article id="tabBalloons" class="tab-pane hidden">
+          <div class="balloons-game-layout">
+            <h3 class="pane-title playfair-title">Balloon Pop Wish-Box 🎈</h3>
+            <p class="pane-subtitle">Pop the floating balloons to release hidden birthday messages and score points!</p>
+            
+            <div class="game-meta-row">
+              <div class="scoreboard">Score: <span id="gameScoreText">0</span> / <span id="totalBalloonsGoal">15</span></div>
+              <button id="restartGameBtn" class="minor-btn">Release More Balloons ➕</button>
+            </div>
+
+            <!-- Game Board Area -->
+            <div id="gamePlayArea" class="game-play-area">
+              <div id="gameInstructions" class="tap-hint">Tap floating balloons to pop! 👆</div>
+              <!-- Balloons float up here dynamically inside this relative box -->
+            </div>
+
+            <!-- Floating Wish Modal/Notification overlay inside card pane -->
+            <div id="wishOverlayMessage" class="wish-reveal-toast hidden">
+              <div id="wishToastEmoji" class="wish-emoji">🎉</div>
+              <div id="wishToastBody" class="wish-body">May all your dreams come true!</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- TAB 4: MYSTICAL GIFT BOX & COUPON -->
+        <article id="tabGift" class="tab-pane hidden">
+          <div class="gift-box-layout">
+            <h3 class="pane-title playfair-title">The Grand Surprise! 🎁</h3>
+            <p class="pane-subtitle">You've unlocked the vault. Tap the magical gift box below to unwrap your primary surprise!</p>
+
+            <div class="gift-box-wrapper">
+              <!-- 3D CSS Stylized Gift Box -->
+              <div id="cssGiftBox3D" class="gift-box-3d" role="button" aria-label="Unwrap Gift Box" tabindex="0">
+                <div class="lid">
+                  <div class="ribbon-cross-lid"></div>
+                  <div class="box-bow"></div>
+                </div>
+                <div class="box-container">
+                  <div class="ribbon-cross-box"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div id="giftClickHint" class="tap-hint box-pulse-hint">Tap the Box to Unwrap! 🌟</div>
+
+            <!-- Opened Gift Surprise Section (Initially hidden) -->
+            <div id="giftRewardContainer" class="gift-reward-card hidden glass-card-nested">
+              <div class="badge-sparkle">⭐ CONGRATULATIONS ⭐</div>
+              <h4 id="giftRewardHeading" class="reward-title playfair-title">You Unlocked Your Coupon!</h4>
+              
+              <!-- Gift Image if uploaded -->
+              <div id="giftImageContainer" class="gift-reward-img-container hidden">
+                <img id="giftRewardImage" src="" alt="Gift Preview">
+              </div>
+
+              <!-- Sleek customizable ticket coupon -->
+              <div class="luxury-coupon">
+                <div class="coupon-decor-barleft"></div>
+                <div class="coupon-details">
+                  <div class="coupon-hdr" id="giftCouponTitle">LIFETIME FRIENDSHIP VOUCHER</div>
+                  <div class="coupon-code-row">
+                    <span class="code-lbl">SECRET CODE:</span>
+                    <span class="code-hash" id="giftCouponCode">BFF-LIFETIME-555</span>
+                  </div>
+                  <div class="coupon-terms" id="giftCouponTerms">This voucher is valid forever. Free coffees, movie dates, and hugs on demand.</div>
+                </div>
+                <div class="coupon-decor-barright"></div>
+              </div>
+
+              <p class="share-nudge">Screenshot this voucher and send it to your friend to redeem it! 😉</p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </main>
+
+    <!-- Bottom Footer -->
+    <footer class="dashboard-footer">
+      <p>Made with ❤️ by Debasis, for Saloni — Happy Birthday, 5th August! 🎂✨</p>
+    </footer>
+  </section>
+
+  <!-- COLLAPSIBLE EDIT / CUSTOMIZER DRAWER (SETTINGS) -->
+  <aside id="settingsDrawer" class="settings-drawer hidden">
+    <div class="drawer-header">
+      <h3 class="playfair-title">Surprise Creator Panel ⚙️</h3>
+      <button id="settingsCloseBtn" aria-label="Close Settings Drawer" class="close-btn">&times;</button>
+    </div>
+
+    <div class="drawer-body">
+      <p class="drawer-instructions">Modify these details to customize this site for your friend. Changes are immediately saved to this browser's <strong>localStorage</strong>!</p>
+
+      <form id="customizerForm">
+        
+        <!-- GENERAL SECTION -->
+        <fieldset class="form-section">
+          <legend>1. Recipient Details</legend>
+          
+          <div class="form-group">
+            <label for="inputName">Recipient's Name</label>
+            <input type="text" id="inputName" required placeholder="e.g., Sarah">
+          </div>
+
+          <div class="form-group">
+            <label for="inputAge">Recipient's Age / Milestone</label>
+            <input type="text" id="inputAge" placeholder="e.g., 25, Sweet Sixteen">
+          </div>
+
+          <div class="form-group">
+            <label for="inputHeaderWishes">Greeting Banner Wishes</label>
+            <input type="text" id="inputHeaderWishes" placeholder="e.g., Happy Birthday! 🎉">
+          </div>
+
+          <div class="form-group">
+            <label for="selectTheme">Color Theme Aesthetic</label>
+            <select id="selectTheme">
+              <option value="royal-magic">Royal Magic (Deep Purple & Gold)</option>
+              <option value="rose-gold">Rose Gold (Elegant Pink & Copper)</option>
+              <option value="neon-sunset">Neon Sunset (Cyberpunk Cyan & Magenta)</option>
+              <option value="cozy-forest">Cozy Forest (Warm Olive & Coral)</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- SECURITY SECTION -->
+        <fieldset class="form-section">
+          <legend>2. Gate Passcode</legend>
+          
+          <div class="form-group">
+            <label for="inputLockCode">Secret Passcode</label>
+            <input type="text" id="inputLockCode" placeholder="Code to unlock, e.g. 1234">
+          </div>
+
+          <div class="form-group">
+            <label for="inputLockHint">Passcode Hint / Riddle</label>
+            <input type="text" id="inputLockHint" placeholder="Clue for the birthday recipient">
+          </div>
+        </fieldset>
+
+        <!-- HEARTFELT LETTER SECTION -->
+        <fieldset class="form-section">
+          <legend>3. Heartfelt Message</legend>
+
+          <div class="form-group">
+            <label for="inputLetterTitle">Letter Title</label>
+            <input type="text" id="inputLetterTitle" placeholder="e.g. A Little Message For You...">
+          </div>
+
+          <div class="form-group">
+            <label for="inputLetterContent">Letter Body Text</label>
+            <textarea id="inputLetterContent" rows="8" placeholder="Write your emotional messages here... Use \n for paragraphs."></textarea>
+          </div>
+        </fieldset>
+
+        <!-- PHOTO MEMORIES SECTION -->
+        <fieldset class="form-section">
+          <legend>4. Memory Lane Carousel (4 items)</legend>
+          
+          <!-- Memory 1 -->
+          <div class="nested-group">
+            <h5>Memory #1</h5>
+            <div class="form-group">
+              <label for="inputMem1Title">Title</label>
+              <input type="text" id="inputMem1Title">
+            </div>
+            <div class="form-group">
+              <label for="inputMem1Desc">Description</label>
+              <input type="text" id="inputMem1Desc">
+            </div>
+            <div class="form-group">
+              <label for="inputMem1Img">Image Address (URL)</label>
+              <input type="url" id="inputMem1Img" placeholder="https://unsplash.com/...">
+            </div>
+          </div>
+
+          <!-- Memory 2 -->
+          <div class="nested-group">
+            <h5>Memory #2</h5>
+            <div class="form-group">
+              <label for="inputMem2Title">Title</label>
+              <input type="text" id="inputMem2Title">
+            </div>
+            <div class="form-group">
+              <label for="inputMem2Desc">Description</label>
+              <input type="text" id="inputMem2Desc">
+            </div>
+            <div class="form-group">
+              <label for="inputMem2Img">Image Address (URL)</label>
+              <input type="url" id="inputMem2Img">
+            </div>
+          </div>
+
+          <!-- Memory 3 -->
+          <div class="nested-group">
+            <h5>Memory #3</h5>
+            <div class="form-group">
+              <label for="inputMem3Title">Title</label>
+              <input type="text" id="inputMem3Title">
+            </div>
+            <div class="form-group">
+              <label for="inputMem3Desc">Description</label>
+              <input type="text" id="inputMem3Desc">
+            </div>
+            <div class="form-group">
+              <label for="inputMem3Img">Image Address (URL)</label>
+              <input type="url" id="inputMem3Img">
+            </div>
+          </div>
+
+          <!-- Memory 4 -->
+          <div class="nested-group">
+            <h5>Memory #4</h5>
+            <div class="form-group">
+              <label for="inputMem4Title">Title</label>
+              <input type="text" id="inputMem4Title">
+            </div>
+            <div class="form-group">
+              <label for="inputMem4Desc">Description</label>
+              <input type="text" id="inputMem4Desc">
+            </div>
+            <div class="form-group">
+              <label for="inputMem4Img">Image Address (URL)</label>
+              <input type="url" id="inputMem4Img">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- BALLOON WISHE LIST SECTION -->
+        <fieldset class="form-section">
+          <legend>5. Balloon Pop mini wishes (one per line)</legend>
+          <div class="form-group">
+            <label for="textareaBalloonWishes">Wishes (comma-separated or one per line)</label>
+            <textarea id="textareaBalloonWishes" rows="6" placeholder="Enter wishes, one per line..."></textarea>
+          </div>
+        </fieldset>
+
+        <!-- GRAND SURPRISE SECTION -->
+        <fieldset class="form-section">
+          <legend>6. Surprise Gift Coupon Details</legend>
+          
+          <div class="form-group">
+            <label for="inputGiftMessage">Gift Success Heading</label>
+            <input type="text" id="inputGiftMessage" placeholder="e.g. Yay! You unlocked your surprise coupon!">
+          </div>
+
+          <div class="form-group">
+            <label for="inputCouponTitle">Coupon Voucher Name</label>
+            <input type="text" id="inputCouponTitle" placeholder="e.g. LIFETIME FRIENDSHIP CARD">
+          </div>
+
+          <div class="form-group">
+            <label for="inputCouponCode">Coupon Code</label>
+            <input type="text" id="inputCouponCode" placeholder="e.g. SECRET-CODE-123">
+          </div>
+
+          <div class="form-group">
+            <label for="inputCouponTerms">Voucher Details / Redemption Terms</label>
+            <input type="text" id="inputCouponTerms" placeholder="e.g. Good for 1x coffee date, 1x movie date.">
+          </div>
+
+          <div class="form-group">
+            <label for="inputGiftImg">Gift Visual Image Address (URL) - Optional</label>
+            <input type="url" id="inputGiftImg" placeholder="https://unsplash.com/...">
+          </div>
+        </fieldset>
+
+        <!-- DRAWER CONTROL BUTTONS -->
+        <div class="drawer-actions">
+          <button type="submit" id="saveConfigBtn" class="primary-btn">Save Customization 💾</button>
+          <button type="button" id="resetConfigBtn" class="danger-btn">Reset Defaults 🔄</button>
+        </div>
+
+        <div class="drawer-export-import">
+          <h4>Share Your Configuration</h4>
+          <p class="export-hint">You can export your configuration as a JSON file, rename it and keep it, or import it back!</p>
+          <div class="export-import-row">
+            <button type="button" id="exportConfigBtn" class="utility-btn">Export Config JSON 📤</button>
+            <label for="importConfigInput" class="utility-btn import-btn-label">Import Config JSON 📥</label>
+            <input type="file" id="importConfigInput" accept=".json" class="hidden-file-input">
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </aside>
+
+  <!-- Load files sequentially -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
